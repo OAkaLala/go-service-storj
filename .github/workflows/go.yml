@@ -1,0 +1,29 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+    - name : Set up environment variables
+      run: export STORAGE_STORJ_INTEGRATION_TEST=on;
+           export STORAGE_STORJ_CREDENTIAL=::add-mask::{apikey:1cCYAHUHkDDVrwGZpPDxP8VrzBmLsF8uQwNzNW3zjbSf3bCzTSaZZRtXsS3RUgJnfo1CCPyPa6U6Jf6oKY8vAv11mNpMe7mSJFnTD9kZxeJ9HmxdDUZPGm7EoPdn8ggrJhnCZus6vXEkrD9EUj7RUNVXu3p9DBKn3ndMzm7fzivVTk7HwLjFwCGGVmz9LTjvt5K1EodV1aBmDotsoNJyPa89KJkKy6kXHytYyDGADMDjvy59tBSbR8AFhHLtRfT2iwEMngiwYM5d};
+           export STORAGE_STORJ_NAME=::add-mask::{gostorage}
+
+    - name: Build
+      run: make build
+
+    - name: Test
+      run: make integration_test
