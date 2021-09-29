@@ -81,7 +81,7 @@ func (s *Storage) stat(ctx context.Context, path string, opt pairStorageStat) (o
 	rp := s.getAbsPath(path)
 	object, err := s.project.StatObject(ctx, s.name, rp)
 	if err != nil {
-		return nil, err
+		return nil, services.ErrObjectNotExist
 	}
 	o = NewObject(s, true)
 	o.Path = path
@@ -111,7 +111,7 @@ func (s *Storage) write(ctx context.Context, path string, r io.Reader, size int6
 		}
 	}
 
-	n, err = io.Copy(upload, r)
+	n, err = io.CopyN(upload, r, size)
 	if err != nil {
 		return 0, err
 	}
